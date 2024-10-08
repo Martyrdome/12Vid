@@ -1,4 +1,4 @@
-import os, shutil, cv2
+import os, shutil, cv2, numpy as np
 
 def fresh_folder(folder: str):
     if os.path.exists(folder):
@@ -19,19 +19,21 @@ def write_config_file(prefix: str, folder: str, fps: int, frames: int, height: i
         write_value("height", height)
         write_value("width", width)
 
-
 def save(path: str, prefix="frame_", folder="tw_frames"):
     fresh_folder(folder)
 
     capture = cv2.VideoCapture(path)
     if not capture.isOpened(): exit()
 
+    print("     Importing Frames...")
     frame_counter = 0
     fps = capture.get(cv2.CAP_PROP_FPS)
+    frame_count = capture.get(cv2.CAP_PROP_FRAME_COUNT)
 
     while True:
         ret, frame = capture.read()
         if not ret:
+            print("   |"+50*"█"+"| Done!")
             write_config_file(prefix, folder, fps, frame_counter, height, width)
             break
         height, width, _ = frame.shape
@@ -55,6 +57,16 @@ def save(path: str, prefix="frame_", folder="tw_frames"):
 
         write_frame_file(frame_counter, prefix, folder, hex_content)
         frame_counter += 1
+
+        percentage = frame_counter / frame_count
+
+        print(
+            "   |"+
+            (np.clip(int(percentage*50), 0, 50)*"█")+
+            (int(50-np.clip(int(percentage*50), 0, 50))*".")+
+            "| " + str(int(percentage*100)) + "%",
+            end="\r"
+        )
 
         cv2.imshow("frame", frame)
         if cv2.waitKey(1) & 0xFF == ord("q"):

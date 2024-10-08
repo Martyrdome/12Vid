@@ -26,13 +26,24 @@ def read_frame(count: int, prefix: str, folder: str, config: dict) -> np.array:
 def save(path: str, prefix="frame_", folder="tw_frames"):
     config = read_config(prefix, folder)
     frames = []
+    print("     Exporting Frames...")
     for i in range(0, int(config["frames"])):
         frames.append(read_frame(i, prefix, folder, config))
-        #print("Finished frame " + str(i))
+
+        percentage = i / int(config["frames"])
+        print(
+            "   |"+
+            (np.clip(int(percentage*50), 0, 50)*"█")+
+            (int(50-np.clip(int(percentage*50), 0, 50))*".")+
+            "| " + str(int(percentage*100)) + "%",
+            end="\r"
+        )
 
         cv2.imshow("frame", frames[-1])
         if cv2.waitKey(1) & 0xFF == ord("q"):
-           break
+            break
+        
+    print("   |"+50*"█"+"| Done!")
     
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     video = cv2.VideoWriter(path, fourcc, config["fps"], (int(config["width"]), int(config["height"])))

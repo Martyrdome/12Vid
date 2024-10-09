@@ -88,6 +88,8 @@ class FileVideoFrameHandler:
                 frame_counter += 1
                 pbar.update(1)
 
+        print("\n")
+
         capture.release()
         cv2.destroyAllWindows()
         self.frames = frame_counter
@@ -110,6 +112,8 @@ class FileVideoFrameHandler:
             corrupted_frame = self.corruption_function(frame)
             hex_digits = corrupted_frame.flatten().tobytes()
             self.write_frame_file(i, hex_digits)
+            
+        print("\n")
 
     def save(self, output_path: str):
         """Create a video from saved frames."""
@@ -120,6 +124,8 @@ class FileVideoFrameHandler:
         for i in tqdm(range(self.frames), desc="Collecting frames"):
             frame = self.read_frame(i)
             video.write(frame)
+
+        print("\n")
 
         video.release()
 
@@ -176,6 +182,8 @@ class MemoryVideoFrameHandler:
                 frame_counter += 1
                 pbar.update(1)
 
+        print("\n")
+
         capture.release()
         cv2.destroyAllWindows()
         self.frames = frame_counter
@@ -192,6 +200,8 @@ class MemoryVideoFrameHandler:
             frame = self.read_frame(i)
             corrupted_frame = self.corruption_function(frame)
             self.hex_frames[i] = corrupted_frame
+            
+        print("\n")
 
     def save(self, output_path: str):
         """Create a video from frames stored in memory."""
@@ -202,6 +212,8 @@ class MemoryVideoFrameHandler:
         for i in tqdm(range(self.frames), desc="Collecting frames"):
             frame = self.read_frame(i)
             video.write(frame)
+
+        print("\n")
 
         video.release()
 

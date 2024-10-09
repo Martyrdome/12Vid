@@ -102,6 +102,7 @@ class FileVideoFrameHandler:
         return np_array
 
     def corrupt_frames(self):
+        """Corrupt the video's frames using this VideoFrameHandler's corruption function."""
         if self.corruption_function is None:
             return
         for i in tqdm(range(self.frames), desc="Corrupting frames"):
@@ -123,6 +124,7 @@ class FileVideoFrameHandler:
         video.release()
 
     def process(self, path: str, output_path: str):
+        """Do all processing steps, in one function!"""
         self.extract_frames(path)
         self.corrupt_frames()
         self.save(output_path)
@@ -183,6 +185,7 @@ class MemoryVideoFrameHandler:
         return self.hex_frames[count]
 
     def corrupt_frames(self):
+        """Corrupt the video's frames using this VideoFrameHandler's corruption function."""
         if self.corruption_function is None:
             return
         for i in tqdm(range(self.frames), desc="Corrupting frames"):
@@ -203,6 +206,7 @@ class MemoryVideoFrameHandler:
         video.release()
 
     def process(self, path: str, output_path: str):
+        """Do all processing steps, in one function!"""
         self.extract_frames(path)
         self.corrupt_frames()
         self.save(output_path)

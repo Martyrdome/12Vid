@@ -5,3 +5,6 @@
 /tw_frames
 *.mp4
 *.avi
+build/
+dist/
+*.egg-info/
